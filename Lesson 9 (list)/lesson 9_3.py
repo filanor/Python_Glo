@@ -13,8 +13,6 @@ if ip.find('.') > -1:
         if i.isdigit():
             if int(i) > 256 and int(i) < 0:
                 flag = 'No'
-            else:
-                flag = 'No'
 else:
     flag = 'No'
     
