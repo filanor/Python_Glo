@@ -1,6 +1,7 @@
+import pathlib
 import random
 
-answers = [6, 9, 25, 60, 2]
+
 questions = [
     {
         'question': 'Сколько будет два плюс два умноженное на два',
@@ -21,7 +22,11 @@ questions = [
     {
         'question': 'Пять свечей горело, две потухли. Сколько свечей осталось?',
         'answer': 2
-     }
+     },
+    {
+        'question': 'Тестовый вопрос введите 1',
+        'answer': 1
+    }
 ]
 
 diagnose = {
@@ -33,14 +38,29 @@ diagnose = {
     5: 'Гений'
 }
 
+# Получение ответа и его проверка
+# False для прекращения сессии вопросов
+def get_answer():
+    while True:
+        answer = input()
+        if answer.lower() == 'exit' or answer.lower() == 'выход':
+            return 'exit'
+        if answer.isdigit() == True:
+            print(f' get_answer {answer}')
+            return int(answer)
+        print('Ответ должен быть числом. Введите число или выход/exit что бы прервать сессию')
 
+
+# Сессия тестирования. Возвращает количество верных ответов
 def examination():
     count_right_answer = 0
     i = 0
     for question in questions:
         print(f'Вопрос № {i+1}: {question["question"]}')
-        user_answer = int(input())
-
+        user_answer = get_answer()
+        if user_answer == 'exit':
+            return 'exit'
+        
         right_answer = question['answer']
         if user_answer == right_answer:
             count_right_answer += 1
@@ -48,6 +68,8 @@ def examination():
 
     return count_right_answer
 
+
+# Запрос, стоит ли протестировать посторно
 def more():
     print('\n\n Хотите попробовать еще раз?')
     more = ''
@@ -63,9 +85,28 @@ def more():
         else:
             print('Я вас не понял, повторите, пожалуйста...')
 
+# Сохранение в файл
+def save_result(str):
+    f = open('results.txt', 'a+')
+    f.write(str + '\n')
+    f.close()
+    
+def print_result():
+    path = pathlib.Path('results.txt')
+    if path.is_file():
+        print('========= НАШИ УЧЕНИКИ ==========')
+        print('Имя              ', 'Баллы ', 'Диагноз   ')
+        f = open('results.txt', 'r')
+        for line in f:
+            line = line.strip('\n')
+            data = line.split()
+            print(f'{data[0]:20}{data[1]:5}{data[2]:10}')
+        f.close()    
 
 
+# основная программа
 print('Добро пожаловать в MyTest.')
+print_result()
 print('Как вас зовут')
 name = input()
 print(f'{name} Ответьте на 5 вопросов и мы поставим вам диагноз')
@@ -74,8 +115,12 @@ random.shuffle(questions)
 
 while True:
     count_right_answer = examination()
+    if count_right_answer == 'exit':
+        break
     print('Количество правильных ответов =', count_right_answer)
     print(f'{name}, Ваш диагноз:', diagnose[count_right_answer])
 
     if more() == False:
+        str = f'{name} {count_right_answer} {diagnose[count_right_answer]}'
+        save_result(str)
         break
