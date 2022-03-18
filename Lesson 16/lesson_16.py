@@ -29,14 +29,8 @@ questions = [
     }
 ]
 
-diagnose = {
-    0: 'Идиот',
-    1: 'Кретин',
-    2: 'Дурак',
-    3: 'Нормальный',
-    4: 'Талант',
-    5: 'Гений'
-}
+
+
 
 # Получение ответа и его проверка
 # False для прекращения сессии вопросов
@@ -69,6 +63,22 @@ def examination():
     return count_right_answer
 
 
+
+# Определение диагноза
+def get_result(count):
+    diagnose = {
+        0: 'Идиот',
+        1: 'Кретин',
+        2: 'Дурак',
+        3: 'Нормальный',
+        4: 'Талант',
+        5: 'Гений'
+    }
+    question_qtty = len(questions)
+    return diagnose[(count * 100 // question_qtty) // 20]
+    
+
+
 # Запрос, стоит ли протестировать посторно
 def more():
     print('\n\n Хотите попробовать еще раз?')
@@ -85,12 +95,15 @@ def more():
         else:
             print('Я вас не понял, повторите, пожалуйста...')
 
+
 # Сохранение в файл
 def save_result(str):
     f = open('results.txt', 'a+')
     f.write(str + '\n')
     f.close()
-    
+
+
+# Вывод таблицы результатов 
 def print_result():
     path = pathlib.Path('results.txt')
     if path.is_file():
@@ -99,13 +112,14 @@ def print_result():
         f = open('results.txt', 'r')
         for line in f:
             line = line.strip('\n')
-            data = line.split()
+            data = line.split('###')
             print(f'{data[0]:20}{data[1]:5}{data[2]:10}')
         f.close()    
 
 
 # основная программа
 print('Добро пожаловать в MyTest.')
+get_result(5)
 print_result()
 print('Как вас зовут')
 name = input()
@@ -117,10 +131,11 @@ while True:
     count_right_answer = examination()
     if count_right_answer == 'exit':
         break
+    result = get_result(count_right_answer)
     print('Количество правильных ответов =', count_right_answer)
-    print(f'{name}, Ваш диагноз:', diagnose[count_right_answer])
+    print(f'{name}, Ваш диагноз:', result)
 
     if more() == False:
-        str = f'{name} {count_right_answer} {diagnose[count_right_answer]}'
+        str = f'{name}###{count_right_answer}###{result}'
         save_result(str)
         break
