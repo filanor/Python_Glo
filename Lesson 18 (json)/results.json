@@ -1,0 +1,14 @@
+[
+    {
+        "py/object": "__main__.User",
+        "name": "яков",
+        "count": 0,
+        "result": "Идиот"
+    },
+    {
+        "py/object": "__main__.User",
+        "name": "оапр",
+        "count": 0,
+        "result": "Идиот"
+    }
+]
