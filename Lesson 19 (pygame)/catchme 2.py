@@ -43,7 +43,7 @@ class Ball:
         self.center_y += self.vy
         
     def move(self):
-        self.clear()
+        #self.clear()
         self.go()
         self.show()
         
@@ -67,7 +67,7 @@ class RandomPointBall(Ball):
     def __init__(self, display):
         super().__init__(display)
         width, height = display.get_size()
-        self.color = pygame.Color('blue')
+        self.color = pygame.Color('green')
         self.center_x = randint(self.radius, width - self.radius)
         self.center_y = randint(self.radius, height - self.radius)
 
